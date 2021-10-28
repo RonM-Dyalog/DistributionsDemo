@@ -1,4 +1,4 @@
-∇ Reset
+∇ Reset;sink
     sink←#.Demo.⎕EX 'DistRefs'
     sink←#.Demo.Plotting.⎕EX (#.Demo.Plotting.⎕NL -⍳9)~'InitCauseway' 'NewPlot' 'View'
     ⎕←'Reset to a clean state!'
