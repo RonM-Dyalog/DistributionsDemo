@@ -1,0 +1,4 @@
+PDF←{
+    a←VerifyControlParameters ⍺
+    ((⍵*¯1+a÷2)×*-⍵÷2)÷(2*a÷2)×!¯1+a÷2
+}

@@ -1,9 +1,9 @@
-∇ r←Name IBeamPDFValues Parameters;⎕IO;dr;a;b;samples;x;cg;y
+∇ r←Name IBeamPDFValues Parameters;⎕IO;dr;parms;samples;x;cg;y
     ⎕IO←1
     dr←DistRef Name
-    (a b)←dr.VerifyControlParameters Parameters
-    samples←a b(16808⌶)Name MeshCount
-    x←(dr.RangeSpan a b) XVals BucketCount
+    parms←dr.VerifyControlParameters Parameters
+    samples←parms(16808⌶)Name MeshCount
+    x←(dr.RangeSpan parms) XVals BucketCount
     cg←{⍺ (≢⍵)}⌸x⍸samples
     y←(1+⍴x)⍴0
     ⎕IO←0

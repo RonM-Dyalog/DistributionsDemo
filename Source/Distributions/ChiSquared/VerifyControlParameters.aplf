@@ -1,0 +1,9 @@
+VerifyControlParameters←{
+    ⎕IO←1
+    ErrMsg←'Chi Squared Distribution ⍵ parameter must be a positive integer'
+    sink←ErrMsg ⎕SIGNAL (1≠⍴,⍵)/11
+    sink←ErrMsg ⎕SIGNAL (0≠1↑0⍴⍵)/11
+    a←1⍴⍵
+    sink←ErrMsg ⎕SIGNAL ((0≥a)∨a≠⌊a)/11
+    a
+}
