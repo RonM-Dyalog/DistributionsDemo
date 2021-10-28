@@ -1,7 +1,9 @@
-∇ DistributionName ShowIdealPDFGraph ControlParameters;XValues;PDFVals;sp
+∇ DistributionName ShowIdealPDFGraph ControlParameters;XValues;PDFVals;sp;chart
   ⍝ DistributionName ShowIdealPDFGraph ControlParameters
   PDFVals←ControlParameters (DistRef DistributionName).PDF XValues←DistributionName XBuckets ControlParameters
+  chart←GetChart
   sp←Plotting.NewPlot ⍬
+  sp.Heading←⊃,/'Ideal PDF for ''' DistributionName ''' with Controls: ' (⍕ControlParameters)
   sp.DrawLineGraph PDFVals XValues
-  Plotting.View sp
+  chart.HTML←sp.RenderSvg 3
 ∇
