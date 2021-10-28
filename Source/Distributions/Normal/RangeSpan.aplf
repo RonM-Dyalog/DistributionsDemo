@@ -1,0 +1,4 @@
+RangeSpan←{
+    (a b)←VerifyControlParameters ⍵
+    (a-7×b) (a+7×b)
+ }
