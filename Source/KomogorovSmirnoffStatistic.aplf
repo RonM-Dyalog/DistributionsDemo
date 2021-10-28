@@ -1,0 +1,7 @@
+KomogorovSmirnoffStatistic←{
+    ⍝ DistributionName KomogorovSmirnoffStatistic ControlParameters
+    dr←DistRef ⍺
+    ideal←NormalizedCummulativeDistribution (⍺ ⍵) PDFValues (dr.RangeSpan ⍵) XVals BucketCount
+    actual←NormalizedCummulativeDistribution ⍺ IBeamPDFValues ⍵
+    ⌈/|actual-ideal
+}

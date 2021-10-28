@@ -1,0 +1,5 @@
+XBuckets←{ 
+    ⍝ DistributionName XBuckets ControlParameters
+    distRef←DistRef ⍺
+    (distRef.RangeSpan ⍵) XVals BucketCount
+}

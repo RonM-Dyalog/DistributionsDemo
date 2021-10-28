@@ -1,0 +1,1 @@
+ NewPlot←{9=⎕NC'CauseWay':⎕NEW Causeway.SharpPlot ⋄ sink←InitCauseway ⍬ ⋄ ⎕NEW Causeway.SharpPlot}

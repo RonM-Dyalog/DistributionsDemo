@@ -1,0 +1,52 @@
+ {sharpplot}←View sharpplot;⎕USING;class;nc;svgmode;ride;dir;Msg;file;Url;win;url;System;Causeway;svg;dotnetcore
+⍝ Display a SharpPlot/SharpLeaf/Document instance on screen
+⍝ BUG with RIDE - FixedAspect and RenderAnimatedSvg don't work
+ nc←sharpplot.⎕NC'RenderSvg' 'SaveSvg'
+ svgmode←2 ⍝ 2=Causeway.SvgMode.FixedAspect
+ :If ¯3∨.≠⌈nc
+     999 ⎕SIGNAL⍨'Not a SharpPlot, SharpLeaf or Document instance'
+ :EndIf
+ ⍝ attempt to use the RIDE first
+ :If 3501⌶⍬  ⍝ we have a RIDE connected
+     svg←sharpplot.RenderSvg svgmode  ⍝ try to display in-memory SVG with the RIDE
+     ⍝ hack around mantis issue #16420 / github ride issue #553
+     svg,⍨←'<svg style="height: -webkit-fill-available; width: -webkit-fill-available;">'
+     svg,←'</svg>'
+     :If 0≡3500⌶svg    ⍝ try to display in-memory SVG with the RIDE
+         :Return ⍝ success
+     :EndIf
+     ⎕←'Failed to send in-memory SVG to the RIDE'
+ :EndIf
+ ⍝ no usable RIDE - attempt to display from the running interpreter
+ :If ¯3.6∧.=nc  ⍝ is a .Net instance - we have a .Net SharpPlot DLL - use the bundled .Net viewer
+     ⎕USING←',sharpplot.dll'
+     :Trap 0
+         (⎕NEW Causeway.SharpPlotViewer sharpplot).Show ⍬
+         :Return
+     :Else
+         ⎕←'Failed to use in-memory Causeway.SharpPlotViewer'
+     :EndTrap
+ :EndIf
+⍝ no RIDE nor .Net viewer - Fallback to opening an SVG file on disk with the default software
+ :If win←'Windows'≡7↑⎕IO⊃# ⎕WG'APLVersion'
+     ⎕USING←''        ⍝ Ensure that System is present if at all possible
+     dotnetcore←4≠System.Environment.Version.Major
+     ⎕USING←',System',(~dotnetcore)/'.dll'
+     :Trap 6 ⋄ dir←System.IO.Path.GetTempPath ⋄ :Else ⋄ dir←'' ⋄ :EndTrap
+     :If 1≥≢dir ⋄ dir←(2 ⎕NQ'.' 'GetEnvironment' 'TEMP'),'\' ⋄ :EndIf
+     :If 1≥≢dir ⋄ dir←(⎕SE.UCMD']cd'),'\' ⋄ :EndIf
+ :Else
+     dir←'/tmp/'
+ :EndIf
+ file←dir,'temporary_causeway_view.svg'
+ ⎕←'No in-memory viewer available - saving temporary SVG file to "',file,'"'
+ sharpplot.SaveSvg file svgmode
+ url←'file://',file
+ ⍝ open the file with the default application
+ :If win
+     ⍝ {}System.Diagnostics.Process.Start⊂url   ⍝ doesn't work
+     {}(⍎⎕NA'P shell32|ShellExecute* P P <0T P P I4')0 0 url 0 0 5 ⍝ let windows decide of the program to run
+ :Else
+     {}⎕SH'xdg-open "',url,'" </dev/null >/dev/null 2>/dev/null &'
+ :EndIf
+

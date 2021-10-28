@@ -1,0 +1,9 @@
+∇ DistributionName ShowIBeamPDFGraph ControlParameters;XValues;PDFVals;sp;dr
+  ⍝ DistributionName ShowIBeamPDFGraph ControlParameters
+  dr←DistRef DistributionName
+  XValues←(dr.RangeSpan ControlParameters)XVals BucketCount
+  PDFVals←DistributionName IBeamPDFValues ControlParameters
+  sp←Plotting.NewPlot ⍬
+  sp.DrawLineGraph PDFVals (1↓¯1↓XValues)
+  Plotting.View sp
+∇

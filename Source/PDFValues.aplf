@@ -1,0 +1,5 @@
+PDFValues←{
+    ⍝ (Name Parameters) PDFValues XValues
+    (Name Parameters)←⍺
+    1↓ ¯1↓Parameters (DistRef Name).PDF ⍵
+}

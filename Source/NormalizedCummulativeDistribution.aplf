@@ -1,0 +1,5 @@
+NormalizedCummulativeDistribution←{
+    ⍝ NormalizedCummulativeDistribution PDFValues
+    cumm←+\⍵
+    cumm÷¯1↑cumm
+}

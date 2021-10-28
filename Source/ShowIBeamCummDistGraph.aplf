@@ -1,0 +1,9 @@
+∇ DistributionName ShowIBeamCummDistGraph ControlParameters;XValues;CummDistVals;sp;dr
+  ⍝ DistributionName ShowIBeamCummDistGraph ControlParameters
+  dr←DistRef DistributionName
+  XValues←(dr.RangeSpan ControlParameters)XVals BucketCount
+  CummDistVals←NormalizedCummulativeDistribution DistributionName IBeamPDFValues ControlParameters
+  sp←Plotting.NewPlot ⍬
+  sp.DrawLineGraph CummDistVals (1↓¯1↓XValues)
+  Plotting.View sp
+∇
