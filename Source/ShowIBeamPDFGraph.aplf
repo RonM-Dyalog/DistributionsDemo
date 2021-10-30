@@ -1,6 +1,11 @@
 ∇ DistributionName ShowIBeamPDFGraph ControlParameters;XValues;PDFVals;sp;dr;chart
   ⍝ DistributionName ShowIBeamPDFGraph ControlParameters
-  dr←DistRef DistributionName
+
+  :IF (⊂DistributionName)∊'RNormal' 'RBeta'
+  DistributionName ShowIdealPDFGraph ControlParameters
+  :Else
+
+  ActualIBeamGraph:dr←DistRef DistributionName
   XValues←(dr.RangeSpan ControlParameters)XVals BucketCount
   PDFVals←DistributionName IBeamPDFValues ControlParameters
   chart←GetChart
@@ -9,4 +14,6 @@
   sp.Heading←⊃,/'IBeam PDF for ''' DistributionName ''' with Controls: ' (⍕ControlParameters)
   sp.DrawLineGraph PDFVals (1↓¯1↓XValues)
   chart.HTML←sp.RenderSvg 3
+
+  :EndIf
 ∇

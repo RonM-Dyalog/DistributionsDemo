@@ -1,0 +1,12 @@
+∇ r←params PDF xvals;⎕IO;dr;a;b;samples;x;cg;y
+    ⎕IO←1
+    dr←##.##.DistRef Name
+    (a b)←VerifyControlParameters params
+    samples←#.REval ⊃,/'rbeta(' (⍕##.##.MeshCount) ',' (⍕a) ',' (⍕b) ')'
+    x←(dr.RangeSpan params) ##.##.XVals ##.##.BucketCount
+    cg←{⍺ (≢⍵)}⌸x⍸samples
+    y←(1+⍴x)⍴0
+    ⎕IO←0
+    y[cg[;0]]←cg[;1]×(⍴x)÷⍴samples
+    r←¯1↓y
+∇

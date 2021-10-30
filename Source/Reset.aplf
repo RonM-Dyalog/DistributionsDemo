@@ -1,5 +1,6 @@
 ∇ Reset;sink
     sink←#.Demo.⎕EX 'DistRefs' 'Chart'
     sink←#.Demo.Plotting.⎕EX (#.Demo.Plotting.⎕NL -⍳9)~'InitCauseway' 'NewPlot' 'View'
+    sink←#.⎕EX'rsession'
     ⎕←'Reset to a clean state!'
 ∇

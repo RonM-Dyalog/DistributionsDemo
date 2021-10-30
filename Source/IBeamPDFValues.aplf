@@ -7,6 +7,6 @@
     cg←{⍺ (≢⍵)}⌸x⍸samples
     y←(1+⍴x)⍴0
     ⎕IO←0
-    y[cg[;0]]←cg[;1]×(⍴x)÷(⍴samples)
+    y[cg[;0]]←cg[;1]×(⍴x)÷⍴samples
     r←1↓¯2↓y
 ∇

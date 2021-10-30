@@ -1,0 +1,2 @@
+ r←NewRSession
+ r←{sink←RS.start ⋄ ⎕NEW RS.Rserve}⍬

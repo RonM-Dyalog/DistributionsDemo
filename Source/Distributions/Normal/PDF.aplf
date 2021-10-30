@@ -1,4 +1,4 @@
 PDF←{
     (a b)←VerifyControlParameters ⍺
-    (÷(○2×b)*÷2)×*-0.5×((⍵-a)*2)÷b
+    (*-(2*⍨⍵-a)÷2×b*2)÷b×0.5*⍨○2
 }

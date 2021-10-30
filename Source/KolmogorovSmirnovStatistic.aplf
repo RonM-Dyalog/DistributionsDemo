@@ -1,0 +1,10 @@
+ r←Name KolmogorovSmirnovStatistic Params;dr;ideal;actual
+    ⍝ DistributionName KomogorovSmirnoffStatistic ControlParameters
+ dr←DistRef Name
+ ideal←NormalizedCummulativeDistribution((('R'=1↑Name)↓Name)Params)IdealPDFValues(dr.RangeSpan Params)XVals BucketCount
+ :If 'R'=1↑Name
+     actual←NormalizedCummulativeDistribution(Name Params)IdealPDFValues(dr.RangeSpan Params)XVals BucketCount
+ :Else
+     actual←NormalizedCummulativeDistribution Name IBeamPDFValues Params
+ :EndIf
+ r←⌈/|actual-ideal
