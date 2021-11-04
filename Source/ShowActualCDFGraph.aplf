@@ -1,12 +1,12 @@
-∇ DistributionName ShowIBeamCummDistGraph ControlParameters;XValues;CummDistVals;sp;dr;chart
+∇ DistributionName ShowActualCDFGraph ControlParameters;XValues;CummDistVals;sp;dr;chart
   ⍝ DistributionName ShowIBeamCummDistGraph ControlParameters
   dr←DistRef DistributionName
   XValues←(dr.RangeSpan ControlParameters)XVals BucketCount
-  CummDistVals←NormalizedCummulativeDistribution DistributionName IBeamPDFValues ControlParameters
+  CummDistVals←NormalizedCummulativeDistribution DistributionName ActualPDFValues ControlParameters
   chart←GetChart
   sp←Plotting.NewPlot ⍬
   sp.SetPenWidths 1
-  sp.Heading←⊃,/'IBeam CDF for ''' DistributionName ''' with Controls: ' (⍕ControlParameters)
+  sp.Heading←⊃,/'Actual CDF for ''' DistributionName ''' with Controls: ' (⍕ControlParameters)
   sp.DrawLineGraph CummDistVals (1↓¯1↓XValues)
   chart.HTML←sp.RenderSvg 3
 ∇

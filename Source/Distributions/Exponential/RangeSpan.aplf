@@ -1,0 +1,4 @@
+ RangeSpan←{
+     a←VerifyControlParameters ⍵
+     0 10
+ }

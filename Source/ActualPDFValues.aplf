@@ -1,0 +1,12 @@
+ r←Name ActualPDFValues Parameters;⎕IO;dr;parms;samples;x;cg;y;span
+ ⎕IO←1
+ dr←DistRef Name
+ parms←dr.VerifyControlParameters Parameters
+ samples←parms(16808⌶)Name MeshCount
+ span←dr.RangeSpan parms
+ x←span XVals BucketCount
+ cg←{⍺(≢⍵)}⌸x⍸samples
+ y←(1+⍴x)⍴0
+ ⎕IO←0
+ y[cg[;0]]←cg[;1]×(⍴x)÷(⍴samples)×--/span
+ r←1↓¯2↓y

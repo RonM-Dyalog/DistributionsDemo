@@ -1,0 +1,4 @@
+ PDF←{
+     a←VerifyControlParameters ⍺
+     a×*-a×⍵
+ }

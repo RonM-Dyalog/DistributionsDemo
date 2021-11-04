@@ -1,0 +1,25 @@
+ DistributionName ShowActualLogPDFGraph ControlParameters;⎕IO;XValues;ActualCoords;sp;dr;chart;BaseLineStyles
+  ⍝ DistributionName ShowActualLogPDFGraph ControlParameters
+ ⎕IO←1
+
+ :If (⊂DistributionName)∊'RNormal' 'RBeta'
+     DistributionName ShowIdealPDFGraph ControlParameters
+ :Else
+
+     dr←DistRef DistributionName
+     XValues←(dr.RangeSpan ControlParameters)XVals BucketCount
+     ActualCoords←{(⍟1⊃⍵)(2⊃⍵)}{(⊂0≠1⊃⍵)/¨⍵}DistributionName ActualPDFCoords ControlParameters
+     chart←GetChart
+     sp←Plotting.NewPlot ⍬
+     BaseLineStyles←sp.GetLineStyles
+     sp.SetLineStyles⊂2⍴1↑⊃BaseLineStyles
+     sp.SetPenWidths⊂1.5 1.5
+     sp.SetColors⊂System.Drawing.Color.(Red Black)
+     sp.SetKeyText⊂'Actual' 'Ideal'
+     sp.KeyStyle←KeyStyles.(CenterAlign+BottomAlign)
+     sp.Heading←⊃,/'Actual Log PDF for '''DistributionName''' with Controls: '(⍕ControlParameters)
+     sp.DrawLineGraph ActualCoords
+     sp.DrawLineGraph{(⍟1⊃⍵)(2⊃⍵)}{(⊂0≠1⊃⍵)/¨⍵}BucketCount(DistributionName IdealPDFDataOp ControlParameters)2⊃ActualCoords
+     chart.HTML←sp.RenderSvg 3
+
+ :EndIf

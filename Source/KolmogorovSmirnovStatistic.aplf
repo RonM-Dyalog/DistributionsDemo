@@ -5,6 +5,6 @@
  :If 'R'=1↑Name
      actual←NormalizedCummulativeDistribution(Name Params)IdealPDFValues(dr.RangeSpan Params)XVals BucketCount
  :Else
-     actual←NormalizedCummulativeDistribution Name IBeamPDFValues Params
+     actual←NormalizedCummulativeDistribution Name ActualPDFValues Params
  :EndIf
  r←⌈/|actual-ideal

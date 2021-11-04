@@ -1,0 +1,4 @@
+ PDF←{
+     (a b)←VerifyControlParameters ⍺
+     (*-(|⍵-a)÷b)÷2×b
+ }

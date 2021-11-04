@@ -1,0 +1,8 @@
+ VerifyControlParameters←{
+     ⎕IO←1
+     ErrMsg←'Exponential Distribution control parameter must be a positive rate value'
+     sink←ErrMsg ⎕SIGNAL(1≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0>1⍴⍵)/11
+     1⍴⍵
+ }

@@ -1,0 +1,52 @@
+:Class KeyStyles
+:Access Public
+
+:Field Public Shared ReadOnly ⍙THIS←⎕THIS
+
+⍝ =========== Basic API ==========
+
+⎕ML←3 ⋄ ⎕IO←1
+:Field Shared ReadOnly true←1
+:Field Shared ReadOnly false←0
+:Field Shared ReadOnly null←⎕NULL
+:Field Shared ReadOnly this←⎕THIS
+∇ type←GetType
+  :Access Public Shared
+  type←'KeyStyles'
+∇ 
+∇ rep←ToString
+  :Access Public Shared
+  rep←'[KeyStyles]'
+∇ 
+∇ Constructor
+  :Access Public Instance
+  :Implements Constructor
+  ⎕DF 'myKeyStyles'
+∇ 
+
+⍝ ============ Fields ============
+:Field Public Shared ReadOnly Absolute←256
+:Field Public Shared ReadOnly AutofitText←64
+:Field Public Shared ReadOnly Baseline←8192
+:Field Public Shared ReadOnly BottomAlign←524288
+:Field Public Shared ReadOnly BoxFrame←32
+:Field Public Shared ReadOnly Boxed←4
+:Field Public Shared ReadOnly CenterAlign←32768
+:Field Public Shared ReadOnly InlineWithData←4096
+:Field Public Shared ReadOnly LeftAlign←16384
+:Field Public Shared ReadOnly MiddleAlign←262144
+:Field Public Shared ReadOnly NoKey←1024
+:Field Public Shared ReadOnly NoWrap←2048
+:Field Public Shared ReadOnly Percentage←128
+:Field Public Shared ReadOnly Plain←512
+:Field Public Shared ReadOnly Reversed←2
+:Field Public Shared ReadOnly RightAlign←65536
+:Field Public Shared ReadOnly Rounded←8
+:Field Public Shared ReadOnly Shadowed←16
+:Field Public Shared ReadOnly TopAlign←131072
+:Field Public Shared ReadOnly Vertical←1
+:Field Public Shared ReadOnly ⍙enum←16⍴'KeyStyles /flags'
+:Field Public Shared ReadOnly ⍙fields←21⍴(44⍴'Vertical          Vertically arranged legend')(48⍴'Reversed          Reversed order of legend items')(27⍴'Boxed             Boxed key')(33⍴'Rounded           Rounded key box')(34⍴'Shadowed          Shadowed key box')(49⍴'BoxFrame          Box given frame instead of text')(55⍴'AutofitText       Shrink text to fit within given frame')(63⍴'Percentage        Position is interpreted in percentage of axes')(51⍴'Absolute          Position is interpreted in points')(40⍴'Plain             Plain (no markers) key')(42⍴'NoKey             No key (always omit key)')(51⍴'NoWrap            Key text is not wrapped to margin')(54⍴'InlineWithData    Legends are written inline with data')(58⍴'Baseline          Baselined legend (on first line of text)')(53⍴'LeftAlign         Horizontally left aligned key frame')(55⍴'CenterAlign       Horizontally center aligned key frame')(54⍴'RightAlign        Horizontally right aligned key frame')(50⍴'TopAlign          Vertically top aligned key frame')(53⍴'MiddleAlign       Vertically middle aligned key frame')(53⍴'BottomAlign       Vertically bottom aligned key frame')(0⍴⍬)
+:Field Public Shared ReadOnly ⍙summary←33⍴'Styles for chart key (aka legend)'
+
+:EndClass

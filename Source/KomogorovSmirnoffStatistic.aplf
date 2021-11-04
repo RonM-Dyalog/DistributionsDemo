@@ -1,7 +1,0 @@
-∇ r←Name KomogorovSmirnoffStatistic Params;dr;ideal;actual
-    ⍝ DistributionName KomogorovSmirnoffStatistic ControlParameters
-    dr←DistRef Name
-    ideal←NormalizedCummulativeDistribution ((('R'=1↑Name)↓Name) Params) IdealPDFValues (dr.RangeSpan Params) XVals BucketCount
-    actual←NormalizedCummulativeDistribution Name IBeamPDFValues Params
-    ⌈/|actual-ideal
-∇

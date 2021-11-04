@@ -1,0 +1,4 @@
+ RangeSpan←{
+     (a b)←VerifyControlParameters ⍵
+     0,14÷a×1.4 ⍝(6×b)-2×a
+ }

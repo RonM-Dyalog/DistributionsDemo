@@ -1,4 +1,4 @@
 RangeSpan←{
-    sink←VerifyControlParameters ⍵
-    0 7
+    param←VerifyControlParameters ⍵
+    0, (5×param)
  }

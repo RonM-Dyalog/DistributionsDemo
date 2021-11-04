@@ -1,5 +1,5 @@
 DistRef←{
-    (2.1=⎕NC ⊂'DistRefs'): DistRefs[(DistRefs.Name)⍳⊂⍵]
+    (2.1=⎕NC ⊂'DistRefs'): DistRefs[(DistRefs.Name)⍳⊂,⍵]
     #.Demo.DistRefs←DistributionSet ⍬
-    DistRefs[(DistRefs.Name)⍳⊂⍵]
+    DistRefs[(DistRefs.Name)⍳⊂,⍵]
 }
