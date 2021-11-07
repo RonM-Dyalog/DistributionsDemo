@@ -1,0 +1,9 @@
+ ControlParameters ShowCDFs DistributionName;⎕IO;XValues;ActualCoords;sp;dr;chart;dnames
+ ⎕IO←1
+ ActualCoords←{(NCD 1⊃⍵)(2⊃⍵)}¨ControlParameters∘ActualPDFCoords¨,⊆DistributionName
+ chart←GetChart
+ sp←Plotting.NewPlot dnames←(⊆DistributionName),⊆'Ideal'
+ sp.Heading←⊃,/'CDFs for '(¯2↓⊃,/dnames,¨⊂', ')' with Params: '(⍕ControlParameters)
+ sp.DrawLineGraph¨ActualCoords
+ sp.DrawLineGraph{(NCD 1⊃⍵)(2⊃⍵)}BucketCount((1↑dnames)IdealPDFDataOp ControlParameters)2⊃⊃ActualCoords
+ chart.HTML←sp.RenderSvg 3

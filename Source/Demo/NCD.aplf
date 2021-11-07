@@ -1,0 +1,5 @@
+ NCD←{
+    ⍝ NormalizedCummulativeDistribution PDFValues
+     cumm←+\⍵
+     cumm÷¯1↑cumm
+ }

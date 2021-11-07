@@ -1,0 +1,8 @@
+ ControlParameters Show2PDFs DistributionNames;⎕IO;XValues;ActualCoords;sp;dr;chart;dnames
+ ⎕IO←1
+ ActualCoords←ControlParameters∘ActualPDFCoords¨dnames←⊆DistributionNames
+ chart←GetChart
+ sp←Plotting.NewPlot DistributionNames
+ sp.Heading←⊃,/'PDF graphs for '''(¯2↓⊃,/dnames,¨⊂', ')''' with Controls: '(⍕ControlParameters)
+ sp.DrawLineGraph¨ActualCoords
+ chart.HTML←sp.RenderSvg 3

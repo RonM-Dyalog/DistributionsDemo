@@ -1,4 +1,0 @@
-RangeSpan←{
-    (a b)←VerifyControlParameters ⍵
-    (a-5×b) (a+5×b)
- }

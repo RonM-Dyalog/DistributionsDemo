@@ -1,0 +1,16 @@
+ r←Params KS_Statistic Names;⎕IO;dr;ideal;actual;NameList
+ ⎕IO←1
+ NameList←⊆Names
+ :Select ≢NameList
+ :Case 1
+     dr←DistRef⊃NameList
+     ideal←NCD(Names Params)IdealPDFValues(dr.RangeSpan Params)XVals BucketCount
+     actual←NCD Params ActualPDFValues⊃NameList
+ :Case 2
+     actual←NCD Params ActualPDFValues 1⊃NameList
+     ideal←NCD Params ActualPDFValues 2⊃NameList
+ :Else
+     ⎕←'Right argument should be either one or two distribution names!'
+     →0
+ :EndSelect
+ r←⌈/|actual-ideal

@@ -1,0 +1,6 @@
+ PDFStepChart coords;⎕IO;chart;sp
+ chart←GetChart
+ sp←Plotting.NewPlot''
+ sp.Heading←''
+ sp.DrawStepChart coords
+ chart.HTML←sp.RenderSvg 3

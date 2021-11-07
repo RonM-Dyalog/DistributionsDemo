@@ -1,0 +1,9 @@
+ ControlParameters ShowActualPDF DistributionName;⎕IO;XValues;ActualCoords;sp;dr;chart
+  ⍝ DistributionName ShowActualPDFGraph ControlParameters
+ ⎕IO←1
+ ActualCoords←ControlParameters ActualPDFCoords DistributionName
+ chart←GetChart
+ sp←Plotting.NewPlot DistributionName
+ sp.Heading←⊃,/'Actual PDF for '''DistributionName''' with Controls: '(⍕ControlParameters)
+ sp.DrawLineGraph ActualCoords
+ chart.HTML←sp.RenderSvg 3

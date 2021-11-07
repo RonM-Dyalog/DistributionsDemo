@@ -1,7 +1,0 @@
-∇ r←DistNames
-  r←{
-    (2.1=⎕NC ⊂'DistRefs'): DistRefs.Name
-    #.Demo.DistRefs←DistributionSet ⍬
-    DistRefs.Name
-    }⍬
-∇

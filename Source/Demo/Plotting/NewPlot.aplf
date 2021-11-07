@@ -1,0 +1,7 @@
+ sp←NewPlot KeyNames;sink
+ :If 9≠⎕NC'##.CauseWay'
+     sink←InitCauseway ##
+ :EndIf
+
+ sp←⎕NEW ##.Causeway.SharpPlot
+ sp SetPlottingState KeyNames

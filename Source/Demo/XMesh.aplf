@@ -1,0 +1,5 @@
+ XMesh←{
+    ⍝ DistributionName XMesh ControlParameters
+     distRef←DistRef ⍺
+     (distRef.RangeSpan ⍵)XVals MeshCount
+ }

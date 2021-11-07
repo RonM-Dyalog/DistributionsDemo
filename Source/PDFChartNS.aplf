@@ -1,9 +1,0 @@
- control PDFChartNS samples;⎕IO;xvals;min;max;x;y;cg;chart;sp
- ⎕IO←1 ⋄ (buckets caption)←control
- (min max)←(¯1 1×÷buckets)+(⌊/,⌈/)samples
- x←base+(max-min)×(⍳buckets-1)÷buckets
- gc←{⍺,≢⍵}⌸x⍸samples ⋄ y←(1+⍴x)⍴0 ⋄ ⎕IO←0
- y[gc[;0]]←gc[;1]×(⍴x)÷(⍴samples)×limit-base
- sp←Plotting.NewPlot ⍬ ⋄ sp.SetPenWidths 1
- sp.Heading←caption ⋄ sp.DrawLineGraph(1↓y)x
- chart←GetChart ⋄ chart.HTML←sp.RenderSvg 3

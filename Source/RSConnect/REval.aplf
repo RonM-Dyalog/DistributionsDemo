@@ -1,5 +1,0 @@
- r←REval expression
- →(¯9=⎕NC'##.rsession')/session_exists
- RS.start
- ##.rsession←⎕NEW RS.Rserve
-session_exists:r←##.rsession.eval expression

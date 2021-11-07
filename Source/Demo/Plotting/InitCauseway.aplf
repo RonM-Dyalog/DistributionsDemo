@@ -1,0 +1,27 @@
+ {init}←{forceupdate}InitCauseway namespace;ROOT;using;ns
+⍝ Bring Causeway structures into target namespace (defaulting to calling namespace)
+⍝ Will try to use SharpPlot .Net DLL if available,
+⍝ then fallback to using the croos-platform SharpPlot APL workspace
+⍝ It is recommended (but not necessary) that the calling functions localise the following names:
+⍝       ⎕USING Causeway System
+⍝ otherwise these globals will be set in the target namespace.
+⍝ See #.Samples.Sample for typical SharpPlot script using this.
+ :If 0∊⍴namespace ⋄ namespace←⎕IO⊃⎕RSI ⋄ :EndIf ⍝ target is calling namespace by default
+ :Trap 6                  ⍝ VALUE ERROR if we don't have a SharpPlot .Net DLL
+     using←⎕USING ⋄ ns←⎕NS ⍬ ⋄ ns.⎕USING←',sharpplot.dll'       ⍝ temporarily modify ⎕USING
+     {}⎕NEW ns.Causeway.SharpPlotViewer                         ⍝ VALUE ERROR if Causeway.SharpPlotViewer can't be found
+     namespace.⎕USING←',sharpplot.dll' ',system.drawing.dll'    ⍝ we have it - use it!
+     :If namespace≢⎕THIS ⋄ ⎕USING←using ⋄ :EndIf                ⍝ restore ⎕USING unless setting it in this namespace
+ :Else                                                  ⍝ fallback to using the cross-platform APL workspace
+     ROOT←#                                                     ⍝ put a single workspace-global copy in this namespace
+     :If 0=⎕NC'forceupdate' ⋄ forceupdate←0 ⋄ :EndIf
+     :If forceupdate ⋄ namespace.⎕EX'Causeway' ⋄ :EndIf         ⍝ force update
+     :If 0=namespace.⎕NC'Causeway'                              ⍝ ensure we have the structures
+         :If forceupdate ⋄ ROOT.⎕EX'Causeway' ⋄ :EndIf          ⍝ force update
+         :If 0=ROOT.⎕NC'Causeway'                               ⍝ copy workspace only once into root
+             'Causeway'ROOT.⎕NS'' ⋄ ROOT.Causeway.⎕CY'sharpplot.dws'
+         :EndIf
+         namespace.System.Drawing←namespace.System←namespace.Causeway←ROOT.Causeway
+     :EndIf
+ :End
+ init←1

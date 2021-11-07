@@ -1,0 +1,9 @@
+ ControlParameters ShowLogPDFs DistributionName;⎕IO;XValues;ActualCoords;sp;dr;chart;dnames
+ ⎕IO←1
+ ActualCoords←{{(⍟1⊃⍵)(2⊃⍵)}{(⊂0≠1⊃⍵)/¨⍵}⍵}¨ControlParameters∘ActualPDFCoords¨,⊆DistributionName
+ chart←GetChart
+ sp←Plotting.NewPlot dnames←(⊆DistributionName),⊆'Ideal'
+ sp.Heading←⊃,/'Log PDFs for '(¯2↓⊃,/dnames,¨⊂', ')' with Controls: '(⍕ControlParameters)
+ sp.DrawLineGraph¨ActualCoords
+ sp.DrawLineGraph{(⍟1⊃⍵)(2⊃⍵)}{(⊂0≠1⊃⍵)/¨⍵}BucketCount((1↑dnames)IdealPDFDataOp ControlParameters)2⊃⊃ActualCoords
+ chart.HTML←sp.RenderSvg 3

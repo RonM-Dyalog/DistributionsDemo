@@ -1,0 +1,5 @@
+ r←GetChart
+ →(9=⎕NC'Chart')/ChartExists
+ ⎕EX'Chart'
+ 'Chart'⎕WC'HTMLRenderer'('Posn' 20 10)('Size' 80 90)
+ChartExists:r←Chart

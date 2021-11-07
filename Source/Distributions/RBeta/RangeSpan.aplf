@@ -1,4 +1,0 @@
-RangeSpan←{
-    sink←VerifyControlParameters ⍵
-    0 1
- }

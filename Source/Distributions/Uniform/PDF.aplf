@@ -1,4 +1,0 @@
-PDF←{
-    (a b)←VerifyControlParameters ⍺
-    (÷b-a)×(⍵≥a)∧⍵≤b
-}

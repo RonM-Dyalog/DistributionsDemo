@@ -1,8 +1,0 @@
-VerifyControlParameters←{
-    ⎕IO←1
-    ErrMsg←'Uniform Distribution control parameters must be two positive numbers in ascending order.'
-    sink←ErrMsg ⎕Signal (2≠⍴,⍵)/11
-    sink←ErrMsg ⎕Signal (0≠1↑0⍴⍵)/11
-    sink←ErrMsg ⎕Signal (~</,⍵)/11
-    2⍴⍵
-}
