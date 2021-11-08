@@ -23,8 +23,9 @@ If you also want access to distributions from the R programming, you'll need to 
 
 Follow Kimmo's instructions for installing R, and then install his RsConnect interface by
 
--- Clone his repository to a directory, say c:\kimmo-rsconnect
--- Install his #.RS namespace by
+1. Clone his repository to a directory, say c:\kimmo-rsconnect
+
+2. Install his #.RS namespace by
 
       ]load c:\kimmo-rsconnect\rserve.dyalog
 
