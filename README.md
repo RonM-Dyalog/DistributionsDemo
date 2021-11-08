@@ -19,7 +19,7 @@ You should now have a namespace called Demo. That namespace contains the code I 
 
     "QA for Statistical Distributions in Dyalog V18.2"
 
-If you also want access to distributions from the R programming, you'll need to install Kimmo Linna's RSConnect system from https://github.com/kimmolinna/rsconnect.git. 
+If you also want access to distributions from the R programming environment, you'll need to install Kimmo Linna's RSConnect system from https://github.com/kimmolinna/rsconnect.git. 
 
 Follow Kimmo's instructions for installing R, and then install his RsConnect interface by
 
