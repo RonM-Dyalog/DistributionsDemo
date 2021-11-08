@@ -1,4 +1,4 @@
  IdealPDF←{
-     (a b)←VerifyControlParameters⌽⍺
+     (a b)←VerifyControlParameters ⍺
      (⍵≥0)×(b÷a)×((b-1)*⍨⍵÷a)×*-b*⍨⍵÷a
  }
