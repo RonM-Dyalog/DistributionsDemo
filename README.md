@@ -31,4 +31,4 @@ Follow Kimmo's instructions for installing R, and then install his RsConnect int
 
 Then you will have access to the R distributions I used in the presentation. You'll also be able execute expressions in the R environment, and you will able to send data to R from APL as well getting data from R to APL.
 
-Oh! And before we forget, save workspace with a name you'll recognize!
+Oh! And before we forget, save your workspace with a name you'll recognize!
