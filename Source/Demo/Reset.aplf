@@ -1,6 +1,4 @@
  Reset;sink
- sink←#.Demo.⎕EX'DistRefs' 'Chart'
- sink←#.Demo.⎕EX'Causeway'
- sink←#.Demo.Plotting.⎕EX'System'
- sink←#.⎕EX'rsession'
+ sink←#.Demo.⎕EX'DistRefs' 'XSpan' 'YSpan'
+ sink←#.Demo.⎕USING←''
  ⎕←'Reset to a clean state!'

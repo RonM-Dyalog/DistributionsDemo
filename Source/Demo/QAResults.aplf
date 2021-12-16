@@ -1,0 +1,123 @@
+ r←QAResults cTests;XSpan;TestParams;ParamCombos;randomSeed;⎕IO
+ ⎕IO←1
+ XSpan←⍬
+ TestParams←0 3⍴⍬
+ ParamCombos←{Nest1←{⊂,⍵} ⋄ ⊃¨((↑(Nest1¨⊂¨⊆⍺)∘.,(Nest1¨⊂,⊆⍵))),Nest1¨⊂,XSpan}
+
+ r←1 5⍴'Params' 'Distribution' 'XSpan Limits' 'Random Seed' 'KS_Stat'
+
+⍝ Bernoulli distribution
+ XSpan←⍬
+ TestParams⍪←(↑{⊂,⍵}¨0.8 0.2 0.5)ParamCombos'Bernoulli'
+
+⍝ Binomial distribution
+ XSpan←⍬
+ TestParams⍪←(20 20 40,¨0.5 0.7 0.5)ParamCombos'Binomial'
+
+⍝ Beta distribution
+ XSpan←0.05 0.95 ⍝ to avoid poles at 0 and 1
+ TestParams⍪←(0.5 0.5)ParamCombos'Beta'
+
+ XSpan←⍬
+ TestParams⍪←(5 1 2 2,¨1 3 2 5)ParamCombos'Beta'
+
+⍝ Cauchy distribution
+
+⍝ Test removed for now because the Cauchy distribution is pathalogic
+⍝ in that both its expected value and its variance are undefined.
+⍝ Its poor KS score appears to because the PDF curve has extremely long tails.
+⍝ See the test below over a smaller x value range.
+⍝ XSpan←⍬
+⍝ TestParams⍪←(0 0 0 ¯2,¨0.5 1 2 1)ParamCombos'Cauchy'
+
+ XSpan←¯5 5
+ TestParams⍪←(0 0 0 ¯2,¨0.5 1 2 1)ParamCombos'Cauchy'
+
+⍝ Chi Squared distribution
+ XSpan←0.05 8 ⍝ To avoid the pole at zero
+ TestParams⍪←1 ParamCombos'Chi Squared'
+
+ XSpan←0 8
+ TestParams⍪←(↑{⊂,⍵}¨2 3 4 6 9)ParamCombos'Chi Squared'
+
+⍝ Exponential distribution
+ XSpan←⍬
+ TestParams⍪←(↑{⊂,⍵}¨0.5 1 1.5)ParamCombos'Exponential'
+
+ XSpan←0 5
+ TestParams⍪←(↑{⊂,⍵}¨0.5 1 1.5)ParamCombos'Exponential'
+
+⍝ F Distribution
+ XSpan←⍬
+ TestParams⍪←(1 2 5 10 100,¨1 1 2 1 100)ParamCombos'F'
+
+⍝ Gamma distribution
+ XSpan←0.05 5 ⍝ To avoid the pole at zero and the effects of the long right tail.
+ TestParams⍪←0.05 5 ParamCombos'Gamma'
+
+ XSpan←0 20
+ TestParams⍪←(1 2 3 5 9 7.5,¨2 2 2 1 0.5 1)ParamCombos'Gamma'
+
+⍝ Inverse Gamma distribution
+
+⍝ Test removed for now.
+⍝ Its poor KS score appears to be due to its extremely long PDF tail on the right.
+⍝ XSpan←⍬
+⍝ TestParams⍪←(1 2 3 3,¨1 1 1 0.5)ParamCombos'Inverse Gamma'
+
+ XSpan←0 3
+ TestParams⍪←(1 2 3 3,¨1 1 1 0.5)ParamCombos'Inverse Gamma'
+
+⍝ Laplace distribution
+ XSpan←¯10 10 ⍝ To reduce the effect of the long tails on the left and right.
+ TestParams⍪←(0 0 0 ¯5,¨1 2 4 4)ParamCombos'Laplace'
+
+⍝ Log Normal distribution
+ XSpan←0 10 ⍝ To cut off the long tail on the right.
+ TestParams⍪←(0 0 0,¨0.25 0.5 1)ParamCombos'Log Normal'
+
+⍝ Logistic distribution
+ XSpan←⍬
+ TestParams⍪←(5 9 9 6 2,¨2 3 4 2 1)ParamCombos'Logistic'
+
+ XSpan←¯5 20
+ TestParams⍪←(5 9 9 6 2,¨2 3 4 2 1)ParamCombos'Logistic'
+
+⍝ Normal distribution
+ XSpan←⍬
+ TestParams⍪←(0 0 0 ¯2,¨2 1 5 0.5*0.5)ParamCombos'Normal'
+
+ XSpan←¯5 5
+ TestParams⍪←(0 0 0 ¯2,¨2 1 5 0.5*0.5)ParamCombos'Normal'
+
+⍝ Poisson distribution
+ XSpan←⍬
+ TestParams⍪←(↑{⊂,⍵}¨1 4 10)ParamCombos'Poisson'
+
+⍝ Student T distribution
+
+⍝ Test disabled for now due to the extremely long tails in the PDF curve
+⍝ XSpan←⍬
+⍝  TestParams⍪←(↑{⊂,⍵}¨1 2 5 20)ParamCombos'Student T'
+
+ XSpan←¯5 5
+ TestParams⍪←(↑{⊂,⍵}¨1 2 5 20)ParamCombos'Student T'
+
+⍝ Uniform distribution
+ XSpan←⍬
+ TestParams⍪←(0 2 ¯4,¨1 10 4)ParamCombos'Uniform'
+
+⍝ Weibull distribution
+
+⍝ Note the XSpan adjustment to avoid the pole at zero.
+ XSpan←0.05 2.5
+ TestParams⍪←0.5 1 ParamCombos'Weibull'
+
+ XSpan←0 2.5
+ TestParams⍪←(1 1.5 5,¨1 1 1)ParamCombos'Weibull'
+
+⍝ At this point we select a subset of the tests as defined by cTests.
+⍝ When cTests ←→ ⍬ we run all the tests in a random order.
+ randomSeed←SetRandomSeed
+ cTests←{cTests≡⍬:≢TestParams ⋄ cTests⌊≢TestParams}cTests
+ r⍪←⊃⍪/{XSpan←3⊃⍵ ⋄ (1⊃⍵)KS_Statistic 2⊃⍵}¨(↓TestParams)[cTests?≢TestParams]

@@ -1,8 +1,0 @@
- ControlParameters ShowIdealCDF DistributionName;XValues;CummDistVals;sp;chart
-  ⍝ DistributionName ShowIdealCummDistGraph ControlParameters
- CummDistVals←NCD ControlParameters(DistRef DistributionName).IdealPDF XValues←DistributionName XBuckets ControlParameters
- chart←GetChart
- sp←Plotting.NewPlot DistributionName
- sp.Heading←⊃,/'Ideal CDF for '''DistributionName''' with Controls: '(⍕ControlParameters)
- sp.DrawLineGraph CummDistVals XValues
- chart.HTML←sp.RenderSvg 3

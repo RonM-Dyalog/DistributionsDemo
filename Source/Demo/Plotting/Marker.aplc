@@ -1,0 +1,215 @@
+:Class Marker
+:Access Public
+
+:Field Public Shared ReadOnly ⍙THIS←⎕THIS
+
+⍝ =========== Basic API ==========
+
+⎕ML←3 ⋄ ⎕IO←1
+:Field Shared ReadOnly true←1
+:Field Shared ReadOnly false←0
+:Field Shared ReadOnly null←⎕NULL
+:Field Shared ReadOnly this←⎕THIS
+∇ type←GetType
+  :Access Public Shared
+  type←'Marker'
+∇ 
+∇ Constructor arg
+  :Access Public Instance
+  :Implements Constructor
+  Marker arg
+  ⎕DF 'myMarker'
+∇ 
+∇ ConstructorDefault
+  :Access Public Instance
+  :Implements Constructor
+  Marker ⍬
+  ⎕DF 'myMarker'
+∇ 
+
+⍝ ============ Global Fields ============
+
+:Field public markertype
+:Field public name
+:Field public definition
+:Field public image
+:Field shared public Ball←15
+:Field shared public Bar←21
+:Field shared public Block←7
+:Field shared public Bullet←11
+:Field shared public Circle←12
+:Field shared public Cross←1
+:Field shared public Del←5
+:Field shared public Diamond←3
+:Field shared public Dot←9
+:Field shared public DownTick←19
+:Field shared public Hyphen←20
+:Field shared public Invisible←8
+:Field shared public LeftTick←16
+:Field shared public Lozenge←6
+:Field shared public Node←14
+:Field shared public Plus←2
+:Field shared public RightTick←17
+:Field shared public Ring←13
+:Field shared public SmallBullet←10
+:Field shared public Triangle←4
+:Field shared public UpTick←18
+
+⍝ ============ Fields ============
+ ⍙struct←6⍴'Marker'
+ ⍙summary←16⍴'Standard markers'
+
+⍝ ============ Methods ============
+
+∇ ms←FromId id
+  :Access public shared 
+   :Select id
+   :Case 1
+       ms←Cross
+   :Case 2
+       ms←Plus
+   :Case 3
+       ms←Diamond
+   :Case 4
+       ms←Triangle
+   :Case 5
+       ms←Del
+   :Case 6
+       ms←Lozenge
+   :Case 7
+       ms←Block
+   :Case 8
+       ms←Invisible
+   :Case 9
+       ms←Dot
+   :Case 10
+       ms←SmallBullet
+   :Case 11
+       ms←Bullet
+   :Case 12
+       ms←Circle
+   :Case 13
+       ms←Ring
+   :Case 14
+       ms←Node
+   :Case 15
+       ms←Ball
+   :Case 16
+       ms←LeftTick
+   :Case 17
+       ms←RightTick
+   :Case 18
+       ms←UpTick
+   :Case 19
+       ms←DownTick
+   :Case 20
+       ms←Hyphen
+   :Case 21
+       ms←Bar
+   :Else
+       ms←65 
+   :End
+∇ 
+∇ ms←FromName name
+  :Access public shared 
+  ⍝⍝s Create a valid marker from the name or number of a known marker
+  ⍝:Public
+  ⍝:Static
+  ⍝: Marker ms
+  ⍝: string name
+   :Select lc name
+   :CaseList 'cross' '1'
+       ms←Cross
+   :CaseList 'plus' '2'
+       ms←Plus
+   :CaseList 'diamond' '3'
+       ms←Diamond
+   :CaseList 'triangle' '4'
+       ms←Triangle
+   :CaseList 'del' '5'
+       ms←Del
+   :CaseList 'lozenge' '6'
+       ms←Lozenge
+   :CaseList 'block' '7'
+       ms←Block
+   :CaseList 'invisible' '8'
+       ms←Invisible
+   :CaseList 'dot' '9'
+       ms←Dot
+   :CaseList 'smallbullet' '10'
+       ms←SmallBullet
+   :CaseList 'bullet' '11'
+       ms←Bullet
+   :CaseList 'circle' '12'
+       ms←Circle
+   :CaseList 'ring' '13'
+       ms←Ring
+   :CaseList 'node' '14'
+       ms←Node
+   :CaseList 'ball' '15'
+       ms←Ball
+   :CaseList 'lefttick' '16'
+       ms←LeftTick
+   :CaseList 'righttick' '17'
+       ms←RightTick
+   :CaseList 'uptick' '18'
+       ms←UpTick
+   :CaseList 'downtick' '19'
+       ms←DownTick
+   :CaseList 'hyphen' '20'
+       ms←Hyphen
+   :CaseList 'bar' '21'
+       ms←Bar
+   :Else
+       72 ⍙THIS.##.Common.Error'Marker.FromName: invalid name : "',name,'"'
+       ms←Block
+   :End
+∇ 
+∇ Marker sourceName
+  :Access private 
+   sourceName←,1 ⍙THIS.##.Common.SingleArg sourceName 
+   :If ⍙THIS.##.Common.isRef sourceName ⋄ sourceName←⍕sourceName ⋄ :EndIf            
+   :If (2=⍴sourceName)∧(⍙THIS.##.Common.isRef↑sourceName) ⋄ sourceName←,2⊃sourceName ⋄ :EndIf  
+   :If ⍙THIS.##.Common.isNumeric∊sourceName ⋄ sourceName←MiniPath sourceName ⋄ :EndIf    
+   name←'Custom'
+   markertype←64
+   definition←sourceName
+   image←null
+∇ 
+∇ minipath←MiniPath xyvv;tokens;xym;seglengths;section;sfb
+  :Access private shared 
+   ⍎(2>|≡xyvv)/'xyvv←,⊂xyvv'  
+   seglengths←⌊0.5×∊⍴¨xyvv
+   xym←((+/seglengths),2)⍴∊xyvv
+   sfb←⌊1↑(2×+/seglengths)↓∊xyvv
+   xym←xym[1;]⍪¯2-⌿xym
+   minipath←'{'
+   :For section :In seglengths
+       tokens←(⊂' m '),(section-1)⍴⊂' l ' 
+       minipath,←∊tokens,¨⍕¨↓section↑[1]xym
+       :If xym[1;]≡+⌿section↑[1]xym       
+           minipath,←' z '
+       :End
+       xym←section↓[1]xym
+   :End
+   minipath←⍙THIS.##.Common.dehb minipath    
+   minipath←minipath,' SFB '[1+3⌊sfb]   
+   minipath←minipath,' }'               
+∇ 
+∇ fmt←ToString
+  :Access public 
+  ⍝⍝s Presents the Marker details in a readable format
+  ⍝:Public override
+  ⍝: string fmt
+   fmt←'Marker [',(⍕markertype),',',name
+   :If ~0∊⍴definition
+       fmt,←',',definition
+   :End
+   fmt,←']'
+∇ 
+∇ r←lc v
+  :Access private shared 
+   r←⎕UCS{⍵+32×(65≤⍵)∧(⍵≤90)}⎕UCS v 
+∇ 
+
+:EndClass

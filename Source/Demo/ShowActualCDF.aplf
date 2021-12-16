@@ -1,9 +1,0 @@
- ControlParameters ShowActualCDF DistributionName;XValues;CummDistVals;sp;dr;chart
- dr←DistRef DistributionName
- XValues←(dr.RangeSpan ControlParameters)XVals BucketCount
- CummDistVals←NCD ControlParameters ActualPDFValues DistributionName
- chart←GetChart
- sp←Plotting.NewPlot DistributionName
- sp.Heading←⊃,/'Actual CDF for '''DistributionName''' with Controls: '(⍕ControlParameters)
- sp.DrawLineGraph CummDistVals(1↓¯1↓XValues)
- chart.HTML←sp.RenderSvg 3

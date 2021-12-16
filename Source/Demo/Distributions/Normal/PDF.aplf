@@ -1,4 +1,0 @@
- PDF←{
-     (a b)←VerifyControlParameters ⍺
-     (a,b)(16808⌶)Name ⍵
- }

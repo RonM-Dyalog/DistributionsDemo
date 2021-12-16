@@ -1,0 +1,613 @@
+:Namespace Distributions
+
+:Class Distribution
+
+  :Field Private Instance m_name 
+  :Field Private Instance m_type 
+  :Field Private ReadOnly Shared m_IdentifierCharacters←'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
+
+  :Property Name 
+  :Access Public Instance
+    ∇ r←get
+      r←,m_name
+    ∇
+  :EndProperty ⍝ Name 
+
+  :Property Type
+  :Access Public Instance
+    ∇ r←get
+      r←m_type
+    ∇
+  :EndProperty ⍝ Type
+
+  ∇ make (name type)
+    :Access Public
+    :Implements Constructor
+    'Type must be ''Continuous'' or ''Discrete'''⎕Signal 11/⍨~(⊂,type)∊'Continuous' 'Discrete'
+    'Name must start with an uppercase letter and contain only letters digits and spaces'⎕Signal 11/⍨~(⎕A∊⍨1↑name)∧∧/name∊m_IdentifierCharacters
+    m_name←name ⋄ m_type←type
+  ∇
+
+  ∇ r←VerifyControlParameters params
+    :Access Public Instance Overridable
+    'The VerifyParameters method must be overridden' ⎕Signal 16
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Overridable
+    'The IdealPDF method must be overridden' ⎕Signal 16
+  ∇
+
+  ∇ r←control Samples shape
+    :Access Public Instance
+    r←(VerifyControlParameters control) (16808⌶)m_name shape
+  ∇
+
+  ∇ r←control RExpression shape 
+    :Access Public Instance Overridable
+    r←'' ⍝ To indicate that sampling from R has not been implemented
+  ∇
+
+  ∇ r←control RSamples shape;expression 
+    :Access Public Instance
+    ('Sampling from R not yet implemented for the ''', m_name,''' distribution.') ⎕Signal 16/⍨''≡expression←control RExpression shape 
+    r←shape⍴#.REval expression
+    →(0=1↑0⍴r)/0
+    ('R evaluation error ',(⍕r),' for the ''', m_name,''' distribution.')⎕Signal 11
+  ∇
+
+:EndClass
+
+:Class Bernoulli : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base ('Bernoulli' 'Discrete') 
+  ∇
+
+  ∇ r←VerifyControlParameters params
+    :Access Public Instance Override
+    r←{
+     ErrMsg←'Bernoulli Distribution control parameter must be a probability value'
+     sink←ErrMsg ⎕SIGNAL(1≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL({(⍵<0)∨⍵>1}1⍴⍵)/11
+     1⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals;a
+    :Access Public Instance Override
+    a←VerifyControlParameters controls 
+    r←(a*2|xvals)×(1-a)*(1-2|xvals)
+  ∇
+
+:EndClass ⍝ Bernoulli
+
+:Class Beta : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Beta' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ErrMsg←'Beta Distribution control parameters must be two positive numbers'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0∨.≥,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals;a;b
+    :Access Public Instance Override
+    (a b)←VerifyControlParameters controls
+    r←(b×(a-1)!a+b-1)×(xvals*a-1)×(1-xvals)*b-1
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     (a b)←VerifyControlParameters ⍺ 
+     ⊃,/'rbeta('(⍕×/⍵)','(⍕a)','(⍕b)')'
+    } shape
+  ∇
+
+:EndClass ⍝Beta
+
+:Class Binomial : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Binomial' 'Discrete'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ErrMsg←'Binomial Distribution control parameters must be a positive integer number of trials and a probability value'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL({⍵≠⌊⍵}1⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL({(⍵<0)∨⍵>1}¯1↑,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇  r←controls IdealPDF xvals;a;b;⎕IO
+     :Access Public Instance Override
+     (a b)←VerifyControlParameters controls
+     r←(xvals!a)×(b*xvals)×(1-b)*a-xvals
+  ∇
+
+:EndClass ⍝Binomial
+
+:Class Cauchy : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Cauchy' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Cauchy Distribution control parameters must be a location value and a positive scale value'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≥2⌷,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals;a;b
+    :Access Public Instance Override
+    (a b)←VerifyControlParameters controls
+    r←÷(○b)×1+((xvals-a)÷b)*2
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     (a b)←VerifyControlParameters ⍺ 
+     ⊃,/'rcauchy('(⍕×/⍵)','(⍕a)','(⍕b)')'
+    } shape
+  ∇
+
+:EndClass ⍝Cauchy
+
+:Class ChiSquared : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Chi Squared' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Chi Squared Distribution ⍵ parameter must be a positive integer'
+     sink←ErrMsg ⎕SIGNAL(1≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     a←1⍴⍵
+     sink←ErrMsg ⎕SIGNAL((0≥a)∨a≠⌊a)/11
+     a
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals;a
+    :Access Public Instance Override
+    a←VerifyControlParameters controls
+    r←{((⍵*¯1+a÷2)×*-⍵÷2)÷(2*a÷2)×!¯1+a÷2} xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     a←VerifyControlParameters ⍺ 
+     ⊃,/'rchisq('(⍕×/⍵)', '(⍕a)')'
+    } shape
+  ∇
+
+:EndClass ⍝ChiSquared
+
+:Class Exponential : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Exponential' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Exponential Distribution control parameter must be a positive rate value'
+     sink←ErrMsg ⎕SIGNAL(1≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0>1⍴⍵)/11
+     1⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals;a
+    :Access Public Instance Override
+    a←VerifyControlParameters controls
+    r←a×*-a×xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     a←VerifyControlParameters ⍺ 
+     ⊃,/'rexp('(⍕×/⍵)', '(⍕a)')'
+    } shape
+  ∇
+
+:EndClass ⍝Exponential
+
+:Class F : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base (,'F') 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ErrMsg←'F Distribution control parameters must be two positive numbers'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0∨.≥,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (d1 d2)←pair←VerifyControlParameters ⍺
+     halfpair←pair÷2
+     Beta←(×/!¯1+halfpair)÷!¯1++/halfpair
+     LogX←⍟⍵
+     *0.5×(((d2×⍟d2)+d1×LogX+⍟d1)-(d1+d2)×⍟d2+d1×⍵)-2×LogX+⍟Beta
+    } xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     (a b)←VerifyControlParameters ⍺ 
+     ⊃,/'rf('(⍕×/⍵)','(⍕a)','(⍕b)')'
+    } shape
+  ∇
+
+:EndClass ⍝F 
+
+:Class Gamma : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Gamma' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ErrMsg←'F Distribution control parameters must be two positive numbers'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0∨.≥,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     ((⍵*a-1)×*-⍵÷b)÷(b*a)×!a-1
+    } xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     (a b)←VerifyControlParameters ⍺ 
+     ⊃,/'rgamma('(⍕×/⍵)','(⍕a)','(⍕b)')'
+    } shape
+  ∇
+
+:EndClass ⍝Gamma 
+
+:Class InvGamma : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Inverse Gamma' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Inverse Gamma Distribution control parameters must be two positive numbers'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0∨.≥2⍴,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     ((b*a)×(⍵*¯1-a)×*-b÷⍵)÷!a-1
+    } xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     (a b)←VerifyControlParameters ⍺ 
+     ⊃,/'rinvgamma('(⍕×/⍵)','(⍕a)','(⍕b)')'
+    } shape
+  ∇
+
+:EndClass ⍝InvGamma 
+
+:Class Laplace : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Laplace' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Laplace Distribution control parameters must be a location value followed by a non-negative scale value'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0>2⌷,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     (*-(|⍵-a)÷b)÷2×b
+    } xvals
+  ∇
+
+:EndClass ⍝Laplace 
+
+:Class Logistic : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Logistic' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Logistic Distribution control parameters must be a location value followed by a non-negative scale value'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0>2⌷,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     (*-(⍵-a)÷b)÷b×2*⍨1+*-(⍵-a)÷b
+    } xvals
+  ∇
+
+:EndClass ⍝Logistic 
+
+:Class LogNormal : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Log Normal' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Log Normal Distribution control parameters must be a location value followed by a non-negative scale value'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0>2⌷,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     (*-((⍟⍵-a)*2)÷2×b×b)÷⍵×b×(○2)*0.5
+   } xvals
+  ∇
+
+:EndClass ⍝LogNormal 
+
+:Class Normal : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Normal' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Normal Distribution control parameters must be a location value followed by a non-negative scale value'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0>2⌷,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     (*-(2*⍨⍵-a)÷2×b*2)÷b×0.5*⍨○2
+    } xvals
+  ∇
+
+:EndClass ⍝Normal 
+
+:Class Poisson : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Poisson' 'Discrete'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ErrMsg←'Poisson Distribution control parameter must be non-negative rate value'
+     sink←ErrMsg ⎕SIGNAL(1≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0∨.≥,⍵)/11
+     1⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     a←VerifyControlParameters ⍺
+     ((a*⍵)×*-a)÷!⍵
+    } xvals
+  ∇
+
+:EndClass ⍝Poisson 
+
+:Class StudentT : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Student T' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Student T Distribution parameter must be a positive integer'
+     sink←ErrMsg ⎕SIGNAL(1≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     a←1⍴⍵
+     a
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     a←VerifyControlParameters ⍺
+     ((!¯1+0.5×a+1)÷(0.5*⍨○a)×!¯1+0.5×a)×(1+(⍵×⍵)÷a)*-0.5×a+1
+    } xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     a←VerifyControlParameters ⍺ 
+     ⊃,/'rt('(⍕×/⍵)', '(⍕a)')'
+    } shape
+  ∇
+
+:EndClass ⍝StudentT 
+
+:Class Uniform : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Uniform' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ⎕IO←1
+     ErrMsg←'Uniform Distribution control parameters must be two positive numbers in ascending order.'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(~</,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters ⍺
+     (÷b-a)×(⍵≥a)∧⍵≤b
+    } xvals
+  ∇
+
+:EndClass ⍝Uniform 
+
+:Class Weibull : Distribution
+
+  ∇ make
+    :Access Public
+    :Implements Constructor :Base 'Weibull' 'Continuous'
+  ∇
+
+  ∇ r←VerifyControlParameters params 
+    :Access Public Instance Override 
+    r←{
+     ErrMsg←'Beta Distribution control parameters must be two non-negative numbers'
+     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
+     sink←ErrMsg ⎕SIGNAL(0∨.>,⍵)/11
+     2⍴⍵
+    } params
+  ∇
+
+  ∇ r←controls IdealPDF xvals
+    :Access Public Instance Override
+    r←controls {
+     (a b)←VerifyControlParameters⌽⍺
+     (⍵≥0)×(b÷a)×((b-1)*⍨⍵÷a)×*-b*⍨⍵÷a
+    } xvals
+  ∇
+
+  ∇ r←controls RExpression shape 
+    :Access Public Instance Override 
+    r← controls {
+     (a b)←VerifyControlParameters ⍺ 
+     ⊃,/'rweibull('(⍕×/⍵)','(⍕a)','(⍕b)')'
+    } shape
+  ∇
+
+:EndClass ⍝Weibull 
+
+
+:EndNamespace ⍝ Distributions

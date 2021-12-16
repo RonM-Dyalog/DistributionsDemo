@@ -1,4 +1,0 @@
- r←params Samples xvals;⎕IO;dr;a;b;samples;x;cg;y
- ⎕IO←1
- (a b)←VerifyControlParameters params
- r←#.REval⊃,/'rbeta('(⍕xvals)','(⍕a)','(⍕b)')'

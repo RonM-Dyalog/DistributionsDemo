@@ -1,9 +1,12 @@
- ControlParameters ShowCDFs DistributionName;⎕IO;XValues;ActualCoords;sp;dr;chart;dnames
- ⎕IO←1
- ActualCoords←{(NCD 1⊃⍵)(2⊃⍵)}¨ControlParameters∘ActualPDFCoords¨,⊆DistributionName
+ ControlParameters ShowCDFs DistributionNames;⎕IO;cp;dnames;YSpan;nsPDF;xMin;xMax;chart;sp;cGraphs;nsPDFs
+ ⎕IO←1 ⋄ cp←⊆ControlParameters ⋄ dnames←⊆DistributionNames
+ cGraphs←⍴nsPDFs←NSBucketSamples¨cp∘.NSActualSamples dnames
+ xMin←⊃⌊/{1↑⍵.XCoords}¨nsPDFs
+ xMax←⊃⌈/{¯1↑⍵.XCoords}¨nsPDFs
  chart←GetChart
- sp←Plotting.NewPlot dnames←(⊆DistributionName),⊆'Ideal'
- sp.Heading←⊃,/'CDFs for '(¯2↓⊃,/dnames,¨⊂', ')' with Params: '(⍕ControlParameters)
- sp.DrawLineGraph¨ActualCoords
- sp.DrawLineGraph{(NCD 1⊃⍵)(2⊃⍵)}BucketCount((1↑dnames)IdealPDFDataOp ControlParameters)2⊃⊃ActualCoords
+ sp←cGraphs Plotting.NewPlot((dnames,¨' ')∘.,⍕¨cp),¨⊂' '
+ sp.Heading←⊃,/'CDFs for '(¯2↓⊃,/dnames,¨⊂',  ')
+ sp.SetXDataRange⊂xMin xMax
+ sp.SetYDataRange⊂0 1
+ sp.DrawLineGraph¨({(NCD ⍵.YCoords)⍵.XCoords}¨nsPDFs),{(NCD ⍵.IdealYCoords)⍵.XCoords}¨nsPDFs
  chart.HTML←sp.RenderSvg 3

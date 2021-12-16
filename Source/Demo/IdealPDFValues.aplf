@@ -1,5 +1,0 @@
- IdealPDFValues←{
-    ⍝ (Name Parameters) IdealPDFValues XValues
-     (Name Parameters)←⍺
-     Parameters(DistRef Name).IdealPDF ⍵
- }

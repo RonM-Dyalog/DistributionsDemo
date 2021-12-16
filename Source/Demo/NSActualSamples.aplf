@@ -1,0 +1,10 @@
+ NSActualSamples←{
+     ⍝ samplesNS ← parameters ∇ distributionName
+     StartsWithR←'R'=1↑⍵
+     ns←⎕NS''
+     ns.Parameters←⍺
+     ns.dr←DistRef StartsWithR↓⍵
+     ns.RandomSeed←SetRandomSeed
+     ns.Samples←⍺{StartsWithR:⍺ ns.dr.RSamples ⍵ ⋄ ⍺ ns.dr.Samples ⍵}MeshCount
+     ns
+ }

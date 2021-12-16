@@ -1,8 +1,0 @@
- VerifyControlParameters←{
-     ⎕IO←1
-     ErrMsg←'Normal Distribution control parameters must be a location value followed by a non-negative scale value'
-     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
-     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
-     sink←ErrMsg ⎕SIGNAL(0>2⌷,⍵)/11
-     2⍴⍵
- }

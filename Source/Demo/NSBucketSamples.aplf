@@ -1,0 +1,18 @@
+ NSBucketSamples←{
+     ⍝ NSSampleBuckets← ∇ sampleNS
+     ⎕IO←1
+     CountAndSort←{cg←{⍺(≢⍵)}⌸⍵ ⋄ cg[⍋cg[;⎕IO];]}
+     samples←{2≠⎕NC'XSpan':⍵ ⋄ XSpan≡⍬:⍵ ⋄ ((⍵≥1⊃XSpan)∧⍵≤2⊃XSpan)/⍵}⍵.Samples
+     min←1↑span←(⌊/,⌈/)samples
+     ns←⎕NS''
+     ns.RandomSeed←⍵.RandomSeed
+     ns.dr←⍵.dr
+     ns.Parameters←⍵.Parameters
+     isDiscrete←ns.dr.Type≡'Discrete'
+     cg←{isDiscrete:CountAndSort ⍵
+         ibsize←÷bsize←(--/span)÷BucketCount ⋄ CountAndSort min+bsize×⌊ibsize×⍵-min
+     }samples
+     (ns.XCoords ns.YCoords)←{(⍵[;1])(⍵[;2]×{⍵:÷MeshCount ⋄ BucketCount÷MeshCount×--/span}isDiscrete)}cg
+     ns.IdealYCoords←9○ns.Parameters ns.dr.IdealPDF ns.XCoords+0.5÷BucketCount
+     ns
+ }

@@ -1,9 +1,18 @@
- ControlParameters ShowLogPDFs DistributionName;⎕IO;XValues;ActualCoords;sp;dr;chart;dnames
- ⎕IO←1
- ActualCoords←{{(⍟1⊃⍵)(2⊃⍵)}{(⊂0≠1⊃⍵)/¨⍵}⍵}¨ControlParameters∘ActualPDFCoords¨,⊆DistributionName
+ ControlParameters ShowLogPDFs DistributionNames;⎕IO;cp;dnames;nsPDFs;chart;sp;cGraphs;filters;YCoords;XCoords;IdealYCoords;xMin;xMax;yMin;yMax
+ ⎕IO←1 ⋄ cp←⊆ControlParameters ⋄ dnames←⊆DistributionNames
+ cGraphs←⍴nsPDFs←,NSBucketSamples¨cp∘.NSActualSamples dnames
+ filters←{(0<⍵.YCoords)∧0<⍵.IdealYCoords}¨nsPDFs
+ YCoords←⍟filters/¨nsPDFs.YCoords
+ IdealYCoords←⍟filters/¨nsPDFs.IdealYCoords
+ XCoords←filters/¨nsPDFs.XCoords
+ xMin←⊃⌊/1↑¨XCoords
+ xMax←⊃⌈/¯1↑¨XCoords
+ yMin←⊃⌊/⌊/¨YCoords
+ yMax←⊃⌈/⌈/¨YCoords
  chart←GetChart
- sp←Plotting.NewPlot dnames←(⊆DistributionName),⊆'Ideal'
- sp.Heading←⊃,/'Log PDFs for '(¯2↓⊃,/dnames,¨⊂', ')' with Controls: '(⍕ControlParameters)
- sp.DrawLineGraph¨ActualCoords
- sp.DrawLineGraph{(⍟1⊃⍵)(2⊃⍵)}{(⊂0≠1⊃⍵)/¨⍵}BucketCount((1↑dnames)IdealPDFDataOp ControlParameters)2⊃⊃ActualCoords
+ sp←cGraphs Plotting.NewPlot((dnames,¨' ')∘.,⍕¨cp),¨⊂' '
+ sp.Heading←⊃,/'Log PDFs for '(¯2↓⊃,/dnames,¨⊂', ')
+ sp.SetXDataRange⊂xMin xMax
+ sp.SetYDataRange⊂yMin yMax
+ sp.DrawLineGraph¨(YCoords{⍺ ⍵}¨XCoords),IdealYCoords{⍺ ⍵}¨XCoords
  chart.HTML←sp.RenderSvg 3

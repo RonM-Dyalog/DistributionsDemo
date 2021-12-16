@@ -1,9 +1,21 @@
- ControlParameters ShowPDFs DistributionName;⎕IO;XValues;ActualCoords;sp;dr;chart;dnames
- ⎕IO←1
- ActualCoords←ControlParameters∘ActualPDFCoords¨⊆DistributionName
+ ControlParameters ShowPDFs DistributionNames;⎕IO;nsInfo;sp;chart;dnames;cp;colors;xMin;xMax;yMin;yMax;nsCoords;cgraphs;DisplayActual;DisplayIdeal;FilterCoords;FilterXCoords;FilterYCoords
+ ⎕IO←1 ⋄ cp←⊆ControlParameters ⋄ dnames←⊆DistributionNames
+ DisplayActual←{⍵.dr.Type≡'Discrete':{sp.DrawScatterPlot ⍵.YCoords ⍵.XCoords ⋄ ⍬}⍵ ⋄ sp.DrawLineGraph ⍵.YCoords ⍵.XCoords}
+ DisplayIdeal←{⍵.dr.Type≡'Discrete':{sp.DrawScatterPlot ⍵.IdealYCoords ⍵.XCoords ⋄ ⍬}⍵ ⋄ sp.DrawLineGraph ⍵.IdealYCoords ⍵.XCoords}
+ FilterCoords←{ns←⎕NS'' ⋄ ns.XCoords←⍺/⍵.XCoords ⋄ ns.YCoords←⍺/⍵.YCoords ⋄ ns.IdealYCoords←⍺/⍵.IdealYCoords ⋄ ns.dr←⍵.dr ⋄ ns}
+ FilterXCoords←{xFilter←(⍵.XCoords≥1⊃⍺)∧⍵.XCoords≤2⊃⍺ ⋄ xFilter FilterCoords ⍵}
+ FilterYCoords←{yFilter←(⍵.YCoords≥1⊃⍺)∧(⍵.YCoords≤2⊃⍺)∧(⍵.IdealYCoords≥1⊃⍺)∧⍵.IdealYCoords≤2⊃⍺ ⋄ yFilter FilterCoords ⍵}
+ cgraphs←⍴nsInfo←,NSBucketSamples¨cp∘.NSActualSamples dnames
+ nsCoords←{2≠⎕NC 'XSpan':⍵ ⋄ XSpan≡⍬:⍵ ⋄ XSpan FilterXCoords ⍵}¨{2≠⎕NC 'YSpan':⍵ ⋄ YSpan≡⍬:⍵ ⋄ YSpan FilterYCoords ⍵}¨nsInfo
+ xMin←⊃⌊/{1↑⍵.XCoords}¨nsCoords
+ xMax←⊃⌈/{¯1↑⍵.XCoords}¨nsCoords
+ yMin←⌊/{(⌊/⍵.YCoords)⌊⌊/⍵.IdealYCoords}¨nsCoords
+ yMax←⌈/{(⌈/⍵.YCoords)⌈⌈/⍵.IdealYCoords}¨nsCoords
  chart←GetChart
- sp←Plotting.NewPlot dnames←(⊆DistributionName),⊆'Ideal'
- sp.Heading←⊃,/'PDFs for '(¯2↓⊃,/dnames,¨⊂', ')' with Controls: '(⍕ControlParameters)
- sp.DrawLineGraph¨ActualCoords
- sp.DrawLineGraph BucketCount((1↑dnames)IdealPDFDataOp ControlParameters)2⊃⊃ActualCoords
+ sp←cgraphs Plotting.NewPlot ((dnames,¨' ')∘.,⍕¨cp),¨⊂' '
+ sp.Heading←⊃,/'PDFs for '(¯2↓⊃,/dnames,¨⊂', ')
+ sp.SetXDataRange ⊂xMin xMax
+ sp.SetYDataRange ⊂yMin yMax
+ DisplayActual¨nsCoords
+ DisplayIdeal¨nsCoords
  chart.HTML←sp.RenderSvg 3

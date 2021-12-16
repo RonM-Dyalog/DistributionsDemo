@@ -1,3 +1,0 @@
- r←controls IdealPDF xvals
- (a b)←VerifyControlParameters controls
- r←(b×(a-1)!a+b-1)×(xvals*a-1)×(1-xvals)*b-1

@@ -1,4 +1,0 @@
- Samples←{
-     a←VerifyControlParameters ⍺
-     a(16808⌶)Name ⍵
- }

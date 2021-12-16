@@ -1,0 +1,8 @@
+ succeeded←TestDistributions cTests;⎕IO;qar;failureBoundary
+ ⎕IO←1
+ 'Right argument must be either ⍬ or a positive integer'⎕SIGNAL 11/⍨{⍵≡⍬:0 ⋄ ~(⍵≥1)∧⍵=⌊⍵}cTests
+ failureBoundary←0.01
+ qar←QAResults cTests
+ →(succeeded←∧/failureBoundary>1↓qar[;5])/0
+ ⎕←'Distribution Test Failures:'
+ ⎕←qar[1;]⍪(failureBoundary≤1↓qar[;5])⌿1 0↓qar

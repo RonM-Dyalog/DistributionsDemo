@@ -1,5 +1,3 @@
  DistributionSet←{
-     NativeDist←(⍎¨(⊂'Distributions.'),¨(Distributions.⎕NL ¯9))
-     RDist←(⍎¨(⊂'RDistributions.'),¨(RDistributions.⎕NL ¯9))
-     NativeDist,RDist
+     ⍎¨(⊂'⎕NEW Distributions.'),¨(Distributions.⎕NL ¯9.4)~⊂'Distribution'
  }

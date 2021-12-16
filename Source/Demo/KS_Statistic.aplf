@@ -1,16 +1,42 @@
- r←Params KS_Statistic Names;⎕IO;dr;ideal;actual;NameList
+ r←parameters KS_Statistic names;⎕IO;nsInfo;nameList;params;isDiscrete;samplePairs;statistic;PlaceIntoBuckets;AddMissingValuesAndSort;Filter
+
+ PlaceIntoBuckets←{
+     min←(⌊/1⊃⍵)⌊⌊/2⊃⍵
+     max←(⌈/1⊃⍵)⌈⌈/2⊃⍵
+     span←max-min
+     ibsize←÷bsize←span÷BucketCount
+     min+bsize×⌊ibsize×⍵-min
+ }
+
+ AddMissingValuesAndSort←{
+     cg1←1⊃⍵ ⋄ cg2←2⊃⍵
+     cg1⍪←0,[1.5]⍨cg2[;1]~cg1[;1]
+     cg2⍪←0,[1.5]⍨cg1[;1]~cg2[;1]
+     cg1[⍋cg1[;1];2](cg2[⍋cg2[;1];2])
+ }
+
+ Filter←{2≠⎕NC'XSpan':⍵ ⋄ XSpan≡⍬:⍵ ⋄ ((⍵≥1⊃XSpan)∧⍵≤2⊃XSpan)/⍵}
+
  ⎕IO←1
- NameList←⊆Names
- :Select ≢NameList
+ nameList←,⊆names
+ params←⊆parameters
+ :Select ≢nameList
  :Case 1
-     dr←DistRef⊃NameList
-     ideal←NCD(Names Params)IdealPDFValues(dr.RangeSpan Params)XVals BucketCount
-     actual←NCD Params ActualPDFValues⊃NameList
+     nsInfo←NSBucketSamples¨params∘.NSActualSamples nameList
+     r←↑(⊂¨params),¨(⊂,nameList),¨{({2≠⎕NC ⍵:⍬ ⋄ XSpan}'XSpan')(⍵.RandomSeed)(⌈/|(NCD ⍵.YCoords)-NCD ⍵.IdealYCoords)}¨,nsInfo
  :Case 2
-     actual←NCD Params ActualPDFValues 1⊃NameList
-     ideal←NCD Params ActualPDFValues 2⊃NameList
+     ⍝ This case is typically for comparing APL distributions against R distribution.
+     ⍝ One of the issues is that those sample sets may have different min/max values.
+     ⍝ So we need to choose the bucket brackets based on the extremes of both cases.
+     ⍝ We also need adjust buckets to match by inserting rows with zero counts.
+     isDiscrete←(DistRef{('R'=1↑⍵)↓⍵}⊃nameList).Type≡'Discrete'
+
+     nsInfo←params∘.NSActualSamples nameList
+     samplePairs←↓((⍴params),2)⍴Filter¨nsInfo.Samples
+     statistic←{left←NCD 1⊃⍵ ⋄ right←NCD 2⊃⍵ ⋄ ⌈/|left-right}¨AddMissingValuesAndSort¨{{{⍺(≢⍵)}⌸⍵}¨isDiscrete{⍺:⍵ ⋄ PlaceIntoBuckets ⍵}⍵}¨samplePairs
+
+     r←⊃¨(⊂¨⍪params),(⊂,,/(1⊃nameList)' vs '(2⊃nameList)),(⊂,⊂,({2≠⎕NC ⍵:⍬ ⋄ XSpan}'XSpan')),(⊂¨⍪↓nsInfo.RandomSeed),statistic
  :Else
      ⎕←'Right argument should be either one or two distribution names!'
      →0
  :EndSelect
- r←⌈/|actual-ideal

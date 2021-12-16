@@ -1,8 +1,0 @@
- VerifyControlParameters←{
-     ⎕IO←1
-     ErrMsg←'Gamma Distribution control parameters must be two non-negative numbers'
-     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
-     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
-     sink←ErrMsg ⎕SIGNAL(0∨.>2⍴,⍵)/11
-     2⍴⍵
- }

@@ -1,6 +1,0 @@
- IdealPDFDataOp←{
-     name←⍺⍺
-     params←⍵⍵
-     dr←⍬⍴DistRef name
-     (params dr.IdealPDF ⍵)⍵
- }

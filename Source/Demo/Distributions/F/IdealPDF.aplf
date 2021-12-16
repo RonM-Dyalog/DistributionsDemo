@@ -1,7 +1,0 @@
- IdealPDF←{
-     (d1 d2)←pair←VerifyControlParameters ⍺
-     halfpair←pair÷2
-     Beta←(×/!¯1+halfpair)÷!¯1++/halfpair
-     LogX←⍟⍵
-     *0.5×(((d2×⍟d2)+d1×LogX+⍟d1)-(d1+d2)×⍟d2+d2×⍵)-2×LogX+⍟Beta
- }

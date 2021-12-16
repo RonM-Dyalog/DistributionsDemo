@@ -1,0 +1,4 @@
+ newSeed←SetRandomSeed;⎕IO
+ ⎕IO←0
+ newSeed←{⎕RL←⍬ 2 ⋄ ?2*30}⍬
+ ⎕RL←newSeed 1

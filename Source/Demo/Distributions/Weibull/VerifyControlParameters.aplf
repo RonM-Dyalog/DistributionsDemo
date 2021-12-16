@@ -1,7 +1,0 @@
- VerifyControlParameters←{
-     ErrMsg←'Beta Distribution control parameters must be two non-negative numbers'
-     sink←ErrMsg ⎕SIGNAL(2≠⍴,⍵)/11
-     sink←ErrMsg ⎕SIGNAL(0≠1↑0⍴⍵)/11
-     sink←ErrMsg ⎕SIGNAL(0∨.>,⍵)/11
-     2⍴⍵
- }

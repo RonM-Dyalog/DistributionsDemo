@@ -1,7 +1,8 @@
- sp←NewPlot KeyNames;sink
- :If 9≠⎕NC'##.CauseWay'
-     sink←InitCauseway ##
- :EndIf
-
- sp←⎕NEW ##.Causeway.SharpPlot
- sp SetPlottingState KeyNames
+ sp←{cgraphs} NewPlot KeyNames;sink;cGraphs
+ →(9.1=##.⎕NC⊂'Causeway')/AlreadyDefined
+ sink←InitCauseway ##
+ DefaultColors←##.System.Drawing.Color.(Red Orange Goldenrod DeepPink Green LightGreen Cyan RoyalBlue Magenta Silver DeepSkyBlue LimeGreen SandyBrown Gold Salmon HotPink)
+ ColorBlack←##.System.Drawing.Color.Black
+AlreadyDefined: sp←⎕NEW ##.Causeway.SharpPlot
+ cGraphs←{2=⎕NC ⍵:cgraphs ⋄ 1}'cgraphs'
+ sp SetPlottingState cGraphs KeyNames

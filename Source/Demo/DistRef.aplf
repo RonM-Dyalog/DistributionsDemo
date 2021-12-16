@@ -1,5 +1,5 @@
- DistRef←{
-     (2.1=⎕NC⊂'DistRefs'):DistRefs[(DistRefs.Name)⍳⊆⍵]
-     #.Demo.DistRefs←DistributionSet ⍬
-     DistRefs[(DistRefs.Name)⍳⊂,⍵]
+ DistRef←{ ⎕IO←0
+     LookUpDist←{inx←DistRefs.Name⍳⊆,⍵ ⋄ sink←'Not a valid distribution name'⎕Signal (∨/inx=⍴DistRefs)/11 ⋄ DistRefs[inx]}
+     (2.1=⎕NC⊂'DistRefs'):LookUpDist ⍵
+     #.Demo.DistRefs←DistributionSet ⍬  ⋄ LookUpDist ⍵
  }
