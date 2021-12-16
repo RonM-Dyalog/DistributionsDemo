@@ -5,7 +5,7 @@
  xMax←⊃⌈/{¯1↑⍵.XCoords}¨nsPDFs
  chart←GetChart
  sp←cGraphs Plotting.NewPlot((dnames,¨' ')∘.,⍕¨cp),¨⊂' '
- sp.Heading←⊃,/'CDFs for '(¯2↓⊃,/dnames,¨⊂',  ')
+ sp.Heading←⊃,/'CDFs for '(¯3↓⊃,/dnames,¨⊂',  ')
  sp.SetXDataRange⊂xMin xMax
  sp.SetYDataRange⊂0 1
  sp.DrawLineGraph¨({(NCD ⍵.YCoords)⍵.XCoords}¨nsPDFs),{(NCD ⍵.IdealYCoords)⍵.XCoords}¨nsPDFs
