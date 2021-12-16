@@ -45,6 +45,8 @@ ShowPDFs -- Draws a probability density graph for a given distribution with a sp
 
 For Example:  2 5 ShowPDFs 'Beta'
 
+For Example:  { XSpan←0 2.5 ⋄ (1 1.5 5,¨1 1 1) ShowPDFs 'Weibull'}⍬
+
 will draw a graph of the probability density function for the Beta distribution with the parameters 2 5. The actual sampled distribution will be drawn with a color and will be superimposed over a black line showing the ideal curve for the pdf function.
 
 ShowCDFs -- Draws the normalized cumulative probability density function for a distribution with a specific set of parameters. As with ShowPDFs, the CDF curve for the actual samples will be drawn in color, and the ideal CDF curve will be drawn in black.
